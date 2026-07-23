@@ -17,4 +17,17 @@ const accountSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+accountSchema.set('toJSON', {
+  transform: (_doc, ret) => {
+    ret.links = {
+      update: `/api/accounts/${ret._id}`,
+      delete: `/api/accounts/${ret._id}`,
+      create_transaction: `/api/accounts/${ret._id}/transactions`,
+      transactions: `/api/accounts/${ret._id}/transactions`,
+      pending_transactions: `/api/accounts/${ret._id}/transactions/pending`,
+    };
+    return ret;
+  },
+});
+
 module.exports = mongoose.model('Account', accountSchema);

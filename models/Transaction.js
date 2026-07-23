@@ -45,4 +45,15 @@ const transactionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+transactionSchema.set('toJSON', {
+  transform: (_doc, ret) => {
+    const accountId = ret.account_id && ret.account_id._id ? ret.account_id._id : ret.account_id;
+    ret.links = {
+      update: `/api/accounts/${accountId}/transactions/${ret._id}`,
+      delete: `/api/accounts/${accountId}/transactions/${ret._id}`,
+    };
+    return ret;
+  },
+});
+
 module.exports = mongoose.model('Transaction', transactionSchema);
